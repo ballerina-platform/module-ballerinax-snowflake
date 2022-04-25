@@ -21,7 +21,7 @@ import ballerina/sql;
 public isolated client class Client {
     *sql:Client;
 
-    public isolated function init(string account_identifier, string? user = (), string? password = (),
+    public isolated function init(string account_identifier, string user, string password,
         Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         string url = string `jdbc:snowflake://${account_identifier}.snowflakecomputing.com/`;
         ClientConfiguration clientConf = {
