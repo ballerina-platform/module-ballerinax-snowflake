@@ -7,7 +7,7 @@ keywords = ["IT Operations/Cloud Services", "Cost/Paid"]
 repository = "https://github.com/ballerina-platform/module-ballerinax-snowflake"
 icon = "icon.png"
 license = ["Apache-2.0"]
-distribution = "2201.0.2"
+distribution = "2201.1.0"
 
 [[platform.java11.dependency]]
 path = "../native/build/libs/snowflake-native-@project.version@.jar"

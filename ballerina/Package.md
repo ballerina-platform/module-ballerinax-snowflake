@@ -9,7 +9,7 @@ You can find reference information for all the Snowflake SQL commands (DDL, DML,
 ### Compatibility
 |                                   | Version                         |
 |-----------------------------------|---------------------------------|
-| Ballerina Language                | Ballerina Swan Lake 2201.0.2    | 
+| Ballerina Language                | Ballerina Swan Lake 2201.1.0    | 
 
 ## Report issues
 To report bugs, request new features, start new discussions, view project boards, etc., go to the [Ballerina Extended Library repository](https://github.com/ballerina-platform/ballerina-extended-library)
