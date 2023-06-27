@@ -3,6 +3,7 @@ Ballerina Snowflake Connector
 
 [![Build](https://github.com/ballerina-platform/module-ballerinax-snowflake/workflows/CI/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-snowflake/actions?query=workflow%3ACI)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-snowflake.svg)](https://github.com/ballerina-platform/module-ballerinax-snowflake/commits/main)
+[![GraalVM Check](https://github.com/ballerina-platform/module-ballerinax-snowflake/actions/workflows/build-with-bal-test-native.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-snowflake/actions/workflows/build-with-bal-test-native.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 The Snowflake [Ballerina](https://ballerina.io/) connector allows you to programmatically access all of the Snowflake applications, databases, APIs, services via the Java Database Connectivity (JDBC) API using [Ballerina](https://ballerina.io/).
