@@ -3,6 +3,7 @@ name: GraalVM Check
 on:
   schedule:
     - cron: '30 18 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
