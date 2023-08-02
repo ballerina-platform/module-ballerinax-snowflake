@@ -16,10 +16,12 @@ rootProject.name = 'ballerinax-snowflake'
 include ':checkstyle'
 include ':snowflake-native'
 include ':snowflake-ballerina'
+include ':snowflake-examples'
 
 project(':checkstyle').projectDir = file("build-config${File.separator}checkstyle")
 project(':snowflake-native').projectDir = file('native')
 project(':snowflake-ballerina').projectDir = file('ballerina')
+project(':snowflake-examples').projectDir = file('examples')
 
 gradleEnterprise {
     buildScan {
