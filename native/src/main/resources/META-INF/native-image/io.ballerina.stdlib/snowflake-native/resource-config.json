@@ -1,0 +1,26 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "\\Qmozilla/public-suffix-list.txt\\E"
+      },
+      {
+        "pattern": "\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
+      }
+    ]
+  },
+  "bundles": [
+    {
+      "name": "net.snowflake.client.jdbc.internal.snowflake.common.version",
+      "locales": [
+        ""
+      ]
+    },
+    {
+      "name": "net.snowflake.client.jdbc.version",
+      "locales": [
+        ""
+      ]
+    }
+  ]
+}
