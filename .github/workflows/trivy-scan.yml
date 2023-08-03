@@ -3,7 +3,7 @@ name: Trivy
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '30 20 * * *'
+    - cron: '30 20 * * *'
 
 jobs:
   ubuntu-build:
@@ -21,3 +21,11 @@ jobs:
           packageUser: ${{ github.actor }}
           packagePAT: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew build -x check -x test
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'rootfs'
+          scan-ref: '.'
+          format: 'table'
+          timeout: '10m0s'
+          exit-code: '1'
