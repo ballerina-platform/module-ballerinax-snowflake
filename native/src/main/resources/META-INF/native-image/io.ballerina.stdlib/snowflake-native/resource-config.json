@@ -3,9 +3,6 @@
     "includes": [
       {
         "pattern": "\\Qmozilla/public-suffix-list.txt\\E"
-      },
-      {
-        "pattern": "\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
       }
     ]
   },
@@ -21,6 +18,12 @@
       "locales": [
         ""
       ]
+    },
+    {
+      "name": "net.snowflake.client.jdbc.jdbc_error_messages",
+        "locales": [
+            "en_LK"
+        ]
     }
   ]
 }
