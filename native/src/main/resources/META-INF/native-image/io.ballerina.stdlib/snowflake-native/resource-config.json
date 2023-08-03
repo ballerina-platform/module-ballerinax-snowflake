@@ -1,0 +1,29 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "\\Qmozilla/public-suffix-list.txt\\E"
+      }
+    ]
+  },
+  "bundles": [
+    {
+      "name": "net.snowflake.client.jdbc.internal.snowflake.common.version",
+      "locales": [
+        ""
+      ]
+    },
+    {
+      "name": "net.snowflake.client.jdbc.version",
+      "locales": [
+        ""
+      ]
+    },
+    {
+      "name": "net.snowflake.client.jdbc.jdbc_error_messages",
+        "locales": [
+            "en_LK"
+        ]
+    }
+  ]
+}

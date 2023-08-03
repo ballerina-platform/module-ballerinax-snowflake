@@ -9,8 +9,17 @@ icon = "icon.png"
 license = ["Apache-2.0"]
 distribution = "2201.7.0"
 
+[platform.java11]
+graalvmCompatible = true
+
 [[platform.java11.dependency]]
+groupId = "io.ballerina.stdlib"
+artifactId = "snowflake-native"
+version = "@project.version@"
 path = "../native/build/libs/snowflake-native-@project.version@.jar"
 
 [[platform.java11.dependency]]
+groupId = "io.ballerina.stdlib"
+artifactId = "sql-native"
+version = "@sql.native.version@"
 path = "./lib/sql-native-@sql.native.version@.jar"
