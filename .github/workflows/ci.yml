@@ -1,9 +1,4 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
-
-# Controls when the action will run.
-# Triggers the workflow on push.
 on:
   push:
     branches-ignore:
@@ -31,6 +26,12 @@ jobs:
         with:
           java-version: 11
 
+      # Setup Ballerina Environment
+      - name: Set Up Ballerina
+        uses: ballerina-platform/setup-ballerina@v1.1.0
+        with:
+          version: latest
+
       # Grant execute permission to the gradlew script
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -42,23 +43,17 @@ jobs:
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
           JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
         run: |
-          ./gradlew build
-        
+          ./gradlew build -x test
+
       # Build Ballerina Project
       - name: Ballerina Build
-        uses: ballerina-platform/ballerina-action/@nightly
-        with:
-          args:
-            pack ./ballerina
+        run: bal pack ./ballerina
         env:
           JAVA_HOME: /usr/lib/jvm/default-jvm
       
       # Test Ballerina Project
       - name: Ballerina Test
-        uses: ballerina-platform/ballerina-action/@nightly
-        with:
-          args:
-            test --test-report --code-coverage --coverage-format=xml ./ballerina
+        run: bal test --test-report --code-coverage --coverage-format=xml ./ballerina
         env:
           JAVA_HOME: /usr/lib/jvm/default-jvm
 
