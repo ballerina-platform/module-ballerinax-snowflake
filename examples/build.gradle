@@ -37,6 +37,9 @@ task testExamples {
 task buildExamples {
     dependsOn ":${project.packageName}-ballerina:build"
     
+    // TODO: Remove this task once the issue of pulling incorrect versions of the Ballerina modules is fixed.
+    executeBalCommand ("pull ballerinax/snowflake.driver", "${project.rootDir}")
+
     gradle.taskGraph.whenReady { graph ->
         if (graph.hasTask(":${project.packageName}-examples:test")) {
             buildExamples.enabled = false
@@ -45,7 +48,8 @@ task buildExamples {
         }
     }
     doLast {
-        examples.each { example ->  executeBalCommand ("build ${example}", "${project.rootDir}") }
+        // TODO: Enabled --offline due to a bug in pulling incorrect versions from the central repository.
+        examples.each { example ->  executeBalCommand ("build --offline ${example}", "${project.rootDir}") }
     }
 }
 
