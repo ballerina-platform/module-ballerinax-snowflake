@@ -16,63 +16,42 @@
  * under the License.
  */
 
-import org.apache.tools.ant.taskdefs.condition.Os
-
 apply plugin: 'java'
 
 description = 'Ballerina - Snowflake Examples'
 
-def ballerinaDist = "${project.rootDir}/target/ballerina-runtime"
-
 def filePath = project.fileTree("${project.projectDir}")
-def examples = filePath.matching { include("**/*.bal") }
+def examples = filePath.matching {
+    include("**/*.bal")
+    exclude("**/deprecated/**/*.bal")
+}
 
 task testExamples {
+    dependsOn ":${project.packageName}-ballerina:build"
+
     doLast {
-        examples.each { example ->
-            try {
-                exec {
-                    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-                        commandLine 'cmd', '/c', "${ballerinaDist}/bin/bal.bat run --offline ${example} && exit %%ERRORLEVEL%%"
-                    } else {
-                        commandLine 'sh', '-c', "${ballerinaDist}/bin/bal run --offline ${example}"
-                    }
-                }
-            } catch (Exception e) {
-                println("Example '${example}' Build failed: " + e.message)
-                throw e
-            }
-        }
+        examples.each { example ->  executeBalCommand ("run ${example} -- -CaccountIdentifier=identifier -Cuser=user -Cpassword=pass", "${project.rootDir}") }
     }
 }
 
 task buildExamples {
+    dependsOn ":${project.packageName}-ballerina:build"
+    
+    // TODO: Remove this task once the issue of pulling incorrect versions of the Ballerina modules is fixed.
+    executeBalCommand ("pull ballerinax/snowflake.driver", "${project.rootDir}")
+
     gradle.taskGraph.whenReady { graph ->
-        if (graph.hasTask(":snowflake:examples:test")) {
+        if (graph.hasTask(":${project.packageName}-examples:test")) {
             buildExamples.enabled = false
         } else {
             testExamples.enabled = false
         }
     }
     doLast {
-        examples.each { example ->
-            try {
-                exec {
-                    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-                        commandLine 'cmd', '/c', "${ballerinaDist}/bin/bal.bat build ${example} && exit %%ERRORLEVEL%%"
-                    } else {
-                        commandLine 'sh', '-c', "${ballerinaDist}/bin/bal build ${example}"
-                    }
-                }
-            } catch (Exception e) {
-                   println("Example '${example}' Build failed: " + e.message)
-                throw e
-            }
-        }
+        // TODO: Enabled --offline due to a bug in pulling incorrect versions from the central repository.
+        examples.each { example ->  executeBalCommand ("build --offline ${example}", "${project.rootDir}") }
     }
 }
 
-testExamples.dependsOn ":snowflake-ballerina:build"
-buildExamples.dependsOn ":snowflake-ballerina:build"
 test.dependsOn testExamples
 build.dependsOn buildExamples
