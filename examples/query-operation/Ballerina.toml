@@ -1,0 +1,8 @@
+[package]
+org = "snowflake"
+name = "query_operation"
+version = "0.1.0"
+distribution = "2201.8.2"
+
+[build-options]
+observabilityIncluded = true
