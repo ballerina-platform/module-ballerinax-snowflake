@@ -16,7 +16,7 @@
  * under the License.
  */
 
-module io.ballerina.stdlib.java.jdbc{
+module io.ballerina.lib.snowflake {
     requires io.ballerina.runtime;
     requires io.ballerina.stdlib.sql;
     exports io.ballerina.lib.snowflake;
