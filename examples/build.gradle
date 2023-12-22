@@ -16,13 +16,13 @@
  * under the License.
  */
  import org.apache.tools.ant.taskdefs.condition.Os
- 
+
 apply plugin: 'java'
 
 description = 'Ballerina - Snowflake Examples'
 
 def ballerinaDist = "${project.rootDir}/target/ballerina-runtime"
-def examples = ["query-operation", "execute-operation", "batch-operation", "call-stored-procedures"]
+def examples = ["employees-db/setup", "employees-db/service"]
 
 clean {
     examples.forEach { example ->
@@ -30,13 +30,6 @@ clean {
         delete "${projectDir}/${example}/Dependencies.toml"
     }
 }
-
-
-// def filePath = project.fileTree("${project.projectDir}")
-// def examples = filePath.matching {
-//     include("**/*.bal")
-//     exclude("**/deprecated/**/*.bal")
-// }
 
 def graalvmFlag = ""
 
@@ -66,7 +59,7 @@ task testExamples {
 
 task buildExamples {
     gradle.taskGraph.whenReady { graph ->
-        if (graph.hasTask(":java.jdbc-examples:test")) {
+        if (graph.hasTask(":snowflake-examples:test")) {
             buildExamples.enabled = false
         }
     }
@@ -78,7 +71,7 @@ task buildExamples {
                     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
                         commandLine 'cmd', '/c', "${ballerinaDist}/bin/bal.bat pack --offline && exit %%ERRORLEVEL%%"
                     } else {
-                        commandLine 'sh', '-c', "${ballerinaDist}/bin/bal pack --offline"
+                        commandLine 'sh', '-c', "${ballerinaDist}/bin/bal pack"
                     }
                 }
             } catch (Exception e) {
@@ -88,47 +81,6 @@ task buildExamples {
         }
     }
 }
-
-def stripBallerinaExtensionVersion(String extVersion) {
-    if (extVersion.matches(project.ext.timestampedVersionRegex)) {
-        def splitVersion = extVersion.split('-')
-        if (splitVersion.length > 3) {
-            def strippedValues = splitVersion[0..-4]
-            return strippedValues.join('-')
-        } else {
-            return extVersion
-        }
-    } else {
-        return extVersion.replace("${project.ext.snapshotVersion}", '')
-    }
-}
-
-// task testExamples {
-//     dependsOn ":${project.packageName}-ballerina:build"
-
-//     doLast {
-//         examples.each { example ->  executeBalCommand ("run ${example} -- -CaccountIdentifier=identifier -Cuser=user -Cpassword=pass", "${project.rootDir}") }
-//     }
-// }
-
-// task buildExamples {
-//     dependsOn ":${project.packageName}-ballerina:build"
-    
-//     // TODO: Remove this task once the issue of pulling incorrect versions of the Ballerina modules is fixed.
-//     //executeBalCommand ("pull ballerinax/snowflake.driver", "${project.rootDir}")
-
-//     gradle.taskGraph.whenReady { graph ->
-//         if (graph.hasTask(":${project.packageName}-examples:test")) {
-//             buildExamples.enabled = false
-//         } else {
-//             testExamples.enabled = false
-//         }
-//     }
-//     doLast {
-//         // TODO: Enabled --offline due to a bug in pulling incorrect versions from the central repository.
-//         examples.each { example ->  executeBalCommand ("build --offline ${example}", "${project.rootDir}") }
-//     }
-// }
 
 buildExamples.dependsOn ":snowflake-ballerina:build"
 testExamples.dependsOn ":snowflake-ballerina:build"

@@ -17,10 +17,20 @@
 import ballerina/jballerina.java;
 import ballerina/sql;
 
+# Represents a Snowflake database client.
 @display {label: "Snowflake", iconPath: "icon.png"}
 public isolated client class Client {
     *sql:Client;
 
+    # Initializes the Snowflake Client. The client must be kept open throughout the application lifetime.
+    #
+    # + account_identifier - The Snowflake account identifier
+    # + user - The username of the Snowflake account
+    # + password - The password of the Snowflake account
+    # + options - The Snowflake client properties
+    # + connectionPool - The `sql:ConnectionPool` to be used for the connection. If there is no
+    #                    `connectionPool` provided, the global connection pool (shared by all clients) will be used
+    # + return - An `sql:Error` if the client creation fails
     public isolated function init(string account_identifier, string user, string password,
         Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         string url = string `jdbc:snowflake://${account_identifier}.snowflakecomputing.com/`;
@@ -34,21 +44,38 @@ public isolated client class Client {
         return createClient(self, clientConf, sql:getGlobalConnectionPool());
     }
 
+    # Executes the query, which may return multiple results.
+    # When processing the stream, make sure to consume all fetched data or close the stream.
+    #
+    # + sqlQuery - The SQL query such as `` `SELECT * from Album WHERE name=${albumName}` ``
+    # + rowType - The `typedesc` of the record to which the result needs to be returned
+    # + return - Stream of records in the `rowType` type
     remote isolated function query(sql:ParameterizedQuery sqlQuery, typedesc<record {}> rowType = <>)
     returns stream<rowType, sql:Error?> = @java:Method {
-        'class: "io.ballerina.stdlib.java.jdbc.nativeimpl.QueryProcessor",
+        'class: "io.ballerina.lib.snowflake.nativeimpl.QueryProcessor",
         name: "nativeQuery"
     } external;
 
+    # Executes the query, which is expected to return at most one row of the result.
+    # If the query does not return any results, `sql:NoRowsError` is returned.
+    #
+    # + sqlQuery - The SQL query such as `` `SELECT * from Album WHERE name=${albumName}` ``
+    # + returnType - The `typedesc` of the record to which the result needs to be returned.
+    #                It can be a basic type if the query result contains only one column
+    # + return - Result in the `returnType` type or an `sql:Error`
     remote isolated function queryRow(sql:ParameterizedQuery sqlQuery, typedesc<anydata> returnType = <>)
     returns returnType|sql:Error = @java:Method {
-        'class: "io.ballerina.stdlib.java.jdbc.nativeimpl.QueryProcessor",
+        'class: "io.ballerina.lib.snowflake.nativeimpl.QueryProcessor",
         name: "nativeQueryRow"
     } external;
 
+    # Executes the SQL query. Only the metadata of the execution is returned (not the results from the query).
+    #
+    # + sqlQuery - The SQL query such as `` `DELETE FROM Album WHERE artist=${artistName}` ``
+    # + return - Metadata of the query execution as an `sql:ExecutionResult` or an `sql:Error`
     remote isolated function execute(sql:ParameterizedQuery sqlQuery)
     returns sql:ExecutionResult|sql:Error = @java:Method {
-        'class: "io.ballerina.stdlib.java.jdbc.nativeimpl.ExecuteProcessor",
+        'class: "io.ballerina.lib.snowflake.nativeimpl.ExecuteProcessor",
         name: "nativeExecute"
     } external;
 
@@ -73,7 +100,7 @@ public isolated client class Client {
     # + return - Summary of the execution and results are returned in an `sql:ProcedureCallResult`, or an `sql:Error`
     remote isolated function call(sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes = [])
     returns sql:ProcedureCallResult|sql:Error = @java:Method {
-        'class: "io.ballerina.stdlib.java.jdbc.nativeimpl.CallProcessor",
+        'class: "io.ballerina.lib.snowflake.nativeimpl.CallProcessor",
         name: "nativeCall"
     } external;
 
@@ -81,52 +108,39 @@ public isolated client class Client {
     #
     # + return - Possible error when closing the client
     public isolated function close() returns sql:Error? = @java:Method {
-        'class: "io.ballerina.stdlib.java.jdbc.nativeimpl.ClientProcessor",
+        'class: "io.ballerina.lib.snowflake.nativeimpl.ClientProcessor",
         name: "close"
     } external;
 }
 
 # An additional set of configurations related to a database connection.
-#
-# + datasourceName - The driver class name to be used to get the connection
-# + properties - The database properties, which should be applied when getting the connection
-# + requestGeneratedKeys - The database operations for which auto-generated keys should be returned
 public type Options record {|
+    # The driver class name to be used to get the connection
     string? datasourceName = ();
+    # The database properties, which should be applied when getting the connection
     map<anydata>? properties = ();
-    Operations requestGeneratedKeys = ALL;
 |};
 
-# Constants to represent database operations.
-public enum Operations {
-    NONE,
-    EXECUTE,
-    BATCH_EXECUTE,
-    ALL
-}
-
 # An additional set of configurations for the JDBC Client to be passed internally within the module.
-#
-# + url - The JDBC URL to be used for the database connection
-# + user - If the database is secured, the username
-# + password - The password of the database associated with the provided username
-# + options - The JDBC client properties
-# + connectionPool - The `sql:ConnectionPool` to be used for the connection. If there is no `connectionPool` provided,
-#                    the global connection pool (shared by all clients) will be used
 type ClientConfiguration record {|
+    # The JDBC URL to be used for the database connection.
     string? url;
+    # If the database is secured, the username.
     string? user;
+    # The password of the database associated with the provided username
     string? password;
+    # The JDBC client properties
     Options? options;
+    # The `sql:ConnectionPool` to be used for the connection. If there is no `connectionPool` provided, the global connection pool (shared by all clients) will be used
     sql:ConnectionPool? connectionPool;
 |};
 
 isolated function createClient(Client jdbcClient, ClientConfiguration clientConf,
     sql:ConnectionPool globalConnPool) returns sql:Error? = @java:Method {
-    'class: "io.ballerina.stdlib.java.jdbc.nativeimpl.ClientProcessor"
+    'class: "io.ballerina.lib.snowflake.nativeimpl.ClientProcessor"
 } external;
 
 isolated function nativeBatchExecute(Client sqlClient, string[]|sql:ParameterizedQuery[] sqlQueries)
 returns sql:ExecutionResult[]|sql:Error = @java:Method {
-    'class: "io.ballerina.stdlib.java.jdbc.nativeimpl.ExecuteProcessor"
+    'class: "io.ballerina.lib.snowflake.nativeimpl.ExecuteProcessor"
 } external;

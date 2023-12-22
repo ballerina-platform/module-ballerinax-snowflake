@@ -1,137 +1,130 @@
 ## Overview
-The [Ballerina](https://ballerina.io/) connector for [Snowflake](https://docs.snowflake.com/en/user-guide/jdbc.html) allows you to programmatically access all of the Snowflake applications, databases, APIs, services via the Java Database Connectivity (JDBC) API using [Ballerina](https://ballerina.io/).
-It provides operations to execute a wide range of standard DDL Commands, SQL Commands, and SQL Functions for querying data sources. 
+The [Snowflake](https://www.snowflake.com/) is a cloud-based data platform that provides a data warehouse as a service designed for the cloud, providing a single integrated platform with a single SQL-based data warehouse for all data workloads.
+The Snowflake data warehouse uses a new SQL database engine with a unique architecture designed for the cloud. It provides operations to execute a wide range of standard DDL Commands, SQL Commands, and SQL Functions for querying data sources.
 You can find reference information for all the Snowflake SQL commands (DDL, DML, and query syntax) [here](https://docs.snowflake.com/en/sql-reference-commands.html).
 
-## Prerequisites
+The `ballerinax/snowflake` package allows you to access the Snowflake database via the Ballerina SQL APIs and manage data persistent in the Snowflake database.
 
-Before using this connector in your Ballerina application, complete the following:
+## Set up guide
 
-### To connect to Snowflake
+To use the Snowflake connector, you must have a valid Snowflake account. If you do not have an account, you can sign up for a account [here](https://signup.snowflake.com/).
 
-* Create a [Snowflake](https://signup.snowflake.com/) account.
-* Obtain the `username` and `password` which you use to login to Snowflake account and `account_identifier` which uniquely identifies a Snowflake account within your business entity, as well as throughout the global network of Snowflake. 
- 
+### Create a warehouse and database
+
+1. Log in to your Snowflake account.
+2. Go to the **Warehouses** tab under the **Admin** section, as shown below.
+
+   ![Snowflake Warehouse](docs/setup/resources/snowflakes_create_warehouse.png "Snowflake Warehouse")
+
+3. Click **+ Warehouse** and select a name and type for a new warehouse, as shown below.
+
+   ![Snowflake Create Warehouse](docs/setup/resources/snowflakes_create_warehouse_2.png "Snowflake Create Warehouse")
+4. Optional - You can set the created warehouse as the default warehouse for the account by editing the profile settings, as shown below.
+
+   ![Snowflake Edit Profile](docs/setup/resources/snokeflakes_user_profile.png "Snowflake Edit Profile")
+
+   ![Snowflake Edit Profile](docs/setup/resources/snowflakes_set_default_warehouse.png "Snowflake set default warehouse")
+
+*NOTE* If you do not set a default warehouse, you must specify the warehouse name when you create a connection to the Snowflake database.
+
+5. Go to the **Databases** tab under the **Data** section and click **+ Database** to create a new database, as shown below.
+
+   ![Snowflake Database](docs/setup/resources/snowflakes_create_database.png "Snowflake Database")
+
+*NOTE* Create a database can either be created using the Snowflake web interface or using the SQL command with the Snowflake connector.
+
 ## Quickstart
 
-To use the Snowflake connector in your Ballerina application, update the .bal file as follows:
+To use the snowflake connector in your Ballerina application, modify the .bal file as follows:
 
-### Step 1: Import connector and driver
-Import the following modules into the Ballerina project:
+### Step 1: Import the connector
+
+Import the `ballerinax/snowflake` package into your Ballerina project.
 ```ballerina
-import ballerina/sql;
-import ballerinax/snowflake;      // Get the Snowflake connector
-import ballerinax/snowflake.driver as _;   // Get the Snowflake driver
+import ballerinax/snowflake;
 ```
 
-### Step 2: Create a new connector instance
-Provide the `account_identifier`, `<username>` and `<password>` to initialize the Snowflake connector. 
-Options should be provided as follows, because `requestGeneratedKeys` option must be set to `snowflake:NONE` as snowflake does not support the retrieval of auto-generated keys.
-```
-snowflake:Options options = {
-    requestGeneratedKeys: snowflake:NONE  // This should be specified
-};
-``` 
-Depending on your requirement, you can also pass additional optional properties during the client connector initialization. 
-For more information on connection string properties, see [Connection String Options](https://docs.snowflake.com/en/user-guide/jdbc.html).
-
-* `<account_identifier>` is the unique identifies a Snowflake account.
-* `<username>` is the username you use to login to Snowflake account.
-* `<password>` is the password you use to login to Snowflake account.
+### Step 2: Import the Snowflake driver into your Ballerina project
 
 ```ballerina
-string account_identifier = "<account_identifier>";  // Eg: "z******.europe-west4.gcp" 
-string user = "<username>";
-string password = "<password>";
-snowflake:Options options = {
-    requestGeneratedKeys: snowflake:NONE  // This should be specified
-};
-
-snowflake:Client snowflakeClient = check new (account_identifier, user, password, options);
+import ballerinax/snowflake.driver as _;
 ```
 
-You can also define `<account_identifier>`, `<username>` and `<password>` as configurable strings in your Ballerina program.
+### Step 3: Instantiate a new connector
 
-### Step 3: Invoke the connector operation
-1. Use the Snowflake connector to consume all of the Snowflake applications, databases, APIs, services via the Java Database Connectivity (JDBC) API using Ballerina.
-
-    Now let’s take a look at a few sample operations.
-
-    Let’s assume,
-    - `COMPANYDB` is the database name. 
-    - `PUBLIC` is the schema name. 
-    - `EMPLOYEES` is the table name
-
-    Use the `query` operation to query data. 
-
-    Following is a sample code to query data from a table.
-
-    ```ballerina
-    public function main() returns error? {
-        sql:ParameterizedQuery sqlQuery = `SELECT * FROM COMPANYDB.PUBLIC.EMPLOYEES LIMIT 10`;
-        stream<record {}, error?> resultStream = snowflakeClient->query(sqlQuery);
-
-        check from record{} result in resultStream
-            do {
-                io:println("Full details of employee: ", result);
-            };
+Create a Snowflake client endpoint by giving authentication details in the Snowflake configuration.
+```ballerina
+Options options = {
+    properties: {
+        "JDBC_QUERY_RESULT_FORMAT": "JSON" // Optional. This 
     }
-    ``` 
+};
 
-    Use the `execute` operation to perform DML and DDL operations.
+snowflake:Client snowflakeClient = check new(accountIdentifier, user, password, options);
+```
 
-    Following is a sample code to insert data into a table
+### Step 4: Invoke the connector operation
+Now, utilize the available connector operations.
 
-    ```ballerina
-    public function main() returns error? {
-        sql:ParameterizedQuery sqlQuery = `INSERT INTO COMPANYDB.PUBLIC.EMPLOYEES (FirstName,
-            LastName, Company) VALUES ('Shawn', 'Jerome', 'WSO2')`;
-        _ = check snowflakeClient->execute(sqlQuery);
-    }
-    ```
+#### Execute a DDL command
+```ballerina
+sql:ExecutionResult result = check snowflakeClient->execute(`CREATE TABLE COMPANY_DB.PUBLIC.EMPLOYEES (
+        ID INT NOT NULL AUTOINCREMENT,
+        FirstName VARCHAR(255),
+        LastName VARCHAR(255),
+        BusinessUnit VARCHAR(255),
+        PRIMARY KEY (ID)
+    )`);
+```
 
-    Use the `batchExecute` operation to perform a batch of DML and DDL operations.
+#### Execute a DML command
+```ballerina
+sql:ExecutionResult result = check snowflakeClient->execute(`INSERT INTO COMPANY_DB.PUBLIC.EMPLOYEES (FirstName,
+        LastName, BusinessUnit) VALUES ('Shawn', 'Jerome', 'Integration')`);
+```
 
-    Following is a sample code to insert multiple records into a table
+#### Execute a query
+```ballerina
+type Employee record {
+    int id;
+    string firstName;
+    string lastName;
+    string businessUnit;
+};
+...
 
-    ```ballerina
-    public function main() returns error? {
-        var insertRecords = [
-            {
-                FirstName: "Gloria",
-                LastName: "Shania",
-                Company: "ABC"
-            }, 
-            {
-                FirstName: "Shane",
-                LastName: "Warny",
-                Company: "BCA"
-            }, 
-            {
-                FirstName: "Neo",
-                LastName: "Mark",
-                Company: "CAB"
-            }
-        ];
+stream<Employee, error?> resultStream = check snowflakeClient->query(`SELECT * FROM COMPANY_DB.PUBLIC.EMPLOYEES`);
+```
 
-        sql:ParameterizedQuery[] insertQueries = 
-            from var data in insertRecords
-            select `INSERT INTO COMPANYDB.PUBLIC.EMPLOYEES
-                    (FirstName, LastName, Company)
-                    VALUES (${data.FirstName}, ${data.LastName}, ${data.Company})`;
+#### Execute a query returning a single row
+```ballerina
+type Employee record {
+    int id;
+    string firstName;
+    string lastName;
+    string businessUnit;
+};
+...
 
-        _ = check snowflakeClient->batchExecute(insertQueries);
-    }
-    ```
-    Use the `call` operation to execute a stored procedure.
+Employee|error result = check snowflakeClient->queryRow(`SELECT * FROM COMPANY_DB.PUBLIC.EMPLOYEES WHERE ID = 1`);
+```
 
-    Following is a sample code to execute the stored procedure named `getEmployeeInfo`
+#### Execute batch DML commands
+```ballerina
+sql:ExecutionResult[] result = check snowflakeClient->batchExecute([
+    `INSERT INTO COMPANY_DB.PUBLIC.EMPLOYEES (FirstName, LastName, BusinessUnit) VALUES ('Shawn', 'Jerome', 'Integration')`,
+    `INSERT INTO COMPANY_DB.PUBLIC.EMPLOYEES (FirstName, LastName, BusinessUnit) VALUES ('John', 'Doe', 'Integration')`
+]);
+```
 
-    ```ballerina
-    public function main() error? {
-        sql:ParameterizedCallQuery sqlQuery = `{CALL COMPANYDB.PUBLIC.getEmployeeInfo()}`;
-        _ = check snowflakeClient->call(sqlQuery);
-    }
-    ```
+#### Call a stored procedure
+```ballerina
+sql:ProcedureCallResult ret = check snowflakeClient->call(`{call PROCEDURES_DB.PUBLIC.SELECT_EMPLOYEE_DATA(1)}`, [Employee]);
+stream<record {}, sql:Error?>? qResult = ret.queryResult;
+```
 
-2. Use `bal run` command to compile and run the Ballerina program.
+### Examples
+
+The following example shows how to use the Snowflake connector to create a table, insert data, and query data from the Snowflake database.
+
+[Employees Data Management Example](https://github.com/ballerina-platform/module-ballerinax-snowflake/tree/master/examples/employees-db) - Manages employee data in a Snowflake database and exposes an HTTP service to interact with the database.
