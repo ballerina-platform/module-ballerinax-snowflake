@@ -58,7 +58,7 @@ isolated service /employees on new http:Listener(8080) {
     }
 
     isolated resource function post .(@http:Payload Employee emp) returns string|int|error? {
-         sql:ExecutionResult result = check snowflakeClient->execute(`
+         _ = check snowflakeClient->execute(`
             INSERT INTO COMPANY_DB.PUBLIC.EMPLOYEE (first_name, last_name, email, phone, hire_date, manager_id, job_title)
             VALUES (${emp.first_name}, ${emp.last_name}, ${emp.email}, ${emp.phone}, ${emp.hire_date},
                     ${emp.manager_id}, ${emp.job_title})

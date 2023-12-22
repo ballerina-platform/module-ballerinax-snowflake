@@ -14,7 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/io;
 import ballerina/sql;
 import ballerina/test;
 import ballerinax/snowflake.driver as _;
@@ -105,7 +104,6 @@ function testCallWithStringTypes() returns error? {
             test:assertFail("Empty result set returned.");
         } else {
             record {} value = data.value;
-            io:println(value);
             test:assertEquals(value["INSERT_STRING_DATA"], "SUCCESS", "Call procedure insert and query did not match.");
         }
         check qResult.close();
