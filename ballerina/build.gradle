@@ -94,54 +94,6 @@ task commitTomlFiles {
     }
 }
 
-// task downloadExternalJars {
-//     doLast {
-//         def configuration = configurations.detachedConfiguration(dependencies.create( "io.ballerina.stdlib:sql-native:${stdlibSqlVersion}"))
-//         def libsDir = file('lib')
-//         libsDir.mkdirs()
-        
-//         copy {
-//             from configuration.singleFile
-//             into libsDir
-//         }
-//     }
-// }
-
-
-// task build {
-//     dependsOn ":${packageName}-native:build"
-//     dependsOn updateTomlFiles
-//     dependsOn downloadExternalJars
-//     doLast {
-//         executeBalCommand ("build", "${project.projectDir}")
-//         executeBalCommand ("pack", "${project.projectDir}")
-//         executeBalCommand ("push --repository=local", "${project.projectDir}")
-
-//         def centralDir = file("${System.getProperty('user.home')}/.ballerina/repositories/central.ballerina.io/")
-//         def cacheDirs = centralDir.listFiles().findAll { it.isDirectory() && it.name.startsWith('cache-') }
-//         delete cacheDirs
-
-//         def destinationDir = new File("${System.getProperty('user.home')}/.ballerina/repositories/central.ballerina.io/bala/ballerinax/${project.packageName}")
-//         if (destinationDir.exists()) {
-//             delete destinationDir;
-//         }
-
-//         copy {
-//             from "${System.getProperty('user.home')}/.ballerina/repositories/local/bala/ballerinax/${project.packageName}"
-//             into destinationDir
-//         }
-//     }
-// }
-
-// task test {
-//     dependsOn ":${packageName}-native:build"
-//     dependsOn updateTomlFiles
-//     dependsOn downloadExternalJars
-//     doLast {
-//         executeBalCommand ("test", "${project.projectDir}")
-//     }
-// }
-
 updateTomlFiles.dependsOn copyStdlibs
 build.dependsOn ":${packageName}-native:build"
 test.dependsOn ":${packageName}-native:build"
