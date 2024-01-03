@@ -15,7 +15,6 @@
 // under the License.
 
 import ballerina/io;
-import ballerinax/mysql.driver as _;
 
 isolated function getByteColumnChannel() returns io:ReadableByteChannel|error {
     io:ReadableByteChannel byteChannel = check io:openReadableFile("./tests/resources/files/byteValue.txt");
