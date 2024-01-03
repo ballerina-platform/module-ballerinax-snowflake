@@ -55,11 +55,26 @@ import ballerinax/snowflake.driver as _;
 
 ### Step 3: Instantiate a new connector
 
+*NOTE:* Snowflake driver fails with Java 16 and above because starting with JDK 16, strong encapsulation was turned on by default and one of the driver dependencies have employed the use of sun.misc.Unsafe along with reflection. This is not allowed in Java 16 and above. Therefore, to run this example, you need to use Java 15 or below. For more information, see [here](https://community.snowflake.com/s/article/JDBC-Driver-Compatibility-Issue-With-JDK-16-and-Later). If you are using Java 16 or above, you can use the following workaround to work with the Snowflake connector:
+
+* Export the following environment variable:
+  ```shell
+  export JDK_JAVA_OPTIONS="--add-opens java.base/java.nio=ALL-UNNAMED"
+  ```
+* Set Snowflake property `JDBC_QUERY_RESULT_FORMAT` to `JSON` as follows:
+  ```ballerina
+  snowflake:Options options = {
+      properties: {
+          "JDBC_QUERY_RESULT_FORMAT": "JSON"
+      }
+  };
+  ```
+
 Create a Snowflake client endpoint by giving authentication details in the Snowflake configuration.
 ```ballerina
 Options options = {
     properties: {
-        "JDBC_QUERY_RESULT_FORMAT": "JSON" // Optional. This 
+        "JDBC_QUERY_RESULT_FORMAT": "JSON" // Optional. This property is used to specify the format of the query result.
     }
 };
 
