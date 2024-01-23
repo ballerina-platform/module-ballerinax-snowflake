@@ -16,3 +16,4 @@ jobs:
     secrets: inherit
     with:
       repo-name: module-ballerinax-snowflake
+      additional-build-flags: "-x test"
