@@ -44,9 +44,13 @@ target
 
 # Ignore Gradle project-specific cache directory
 .gradle
+.vscode
 
 # Ignore Gradle build output directory
 build
 
 # Ignore lib
-lib
+ballerina/lib/*.jar
+
+# Ignore bin directory
+native/bin

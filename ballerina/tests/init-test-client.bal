@@ -1,6 +1,6 @@
-// Copyright (c) 2022 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+// Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com) All Rights Reserved.
 //
-// WSO2 Inc. licenses this file to you under the Apache License,
+// WSO2 LLC. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
 // in compliance with the License.
 // You may obtain a copy of the License at
@@ -14,23 +14,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/sql;
-import ballerinax/snowflake;      // Get the Snowflake connector
-import ballerinax/snowflake.driver as _;   // Get the Snowflake driver
-
 // Connection Configurations
 configurable string accountIdentifier = ?;
 configurable string user = ?;
 configurable string password = ?;
 
-snowflake:Options options = {
-    requestGeneratedKeys: snowflake:NONE
+Options options = {
+    properties: {
+        "JDBC_QUERY_RESULT_FORMAT": "JSON"
+    }
 };
 
 // Initialize the Snowflake client
-snowflake:Client snowflakeClient = check new (accountIdentifier, user, password, options);
-
-public function main() returns error? {
-    sql:ParameterizedCallQuery sqlQuery = `{CALL COMPANYDB.PUBLIC.getEmployee()}`;
-    _ = check snowflakeClient->call(sqlQuery);
-}
+Client snowflakeClient = check new (accountIdentifier, user, password, options);

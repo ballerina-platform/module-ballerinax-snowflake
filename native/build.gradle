@@ -16,13 +16,16 @@
  */
 
 plugins {
-    id 'java-library'
+    id 'java'
     id 'com.github.spotbugs'
     id 'checkstyle'
     id 'jacoco'
+    id 'application'
 }
 
 description = 'Ballerina - Snowflake Native'
+
+applicationDefaultJvmArgs = ['JDK_JAVA_OPTIONS', '--add-opens java.base/java.nio=ALL-UNNAMED']
 
 configurations {
     jacocoRuntime
@@ -112,5 +115,11 @@ compileJava {
                 '--module-path', classpath.asPath,
         ]
         classpath = files()
+    }
+}
+
+jar {
+    manifest {
+        attributes "Add-Opens": "java.base/java.nio=ALL-UNNAMED"
     }
 }
