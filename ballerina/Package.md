@@ -8,7 +8,7 @@ You can find reference information for all the Snowflake SQL commands (DDL, DML,
 
 The `ballerinax/snowflake` package allows you to access the Snowflake database via the Ballerina SQL APIs and manage data persistent in the Snowflake database.
 
-## Set up guide
+## Setup guide
 
 To use the Snowflake connector, you must have a valid Snowflake account. If you do not have an account, you can sign up for a account [here](https://signup.snowflake.com/).
 
