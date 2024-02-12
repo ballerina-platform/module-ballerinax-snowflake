@@ -24,19 +24,19 @@ To use the Snowflake connector, you must have a valid Snowflake account. If you 
 
 1. Log in to your Snowflake account.
 2. Go to the **Warehouses** tab under the **Admin** section, as shown below.
-   <img alt="Snowflake Warehouse" src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snowflakes_create_warehouse.png" width="75%" style='border:1px solid #000000'/>
+   <img alt="Snowflake Warehouse" src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snowflakes_create_warehouse.png" style="border:1px solid #000000; width:100%"/>
 
 3. Click **+ Warehouse** and select a name and type for a new warehouse, as shown below.
-   <img alt="Snowflake Create Warehouse" src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snowflakes_create_warehouse_2.png" width="75%" style='border:1px solid #000000'/>
+   <img alt="Snowflake Create Warehouse" src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snowflakes_create_warehouse_2.png" style="border:1px solid #000000; width:100%"/>
 
 4. Optional - You can set the created warehouse as the default warehouse for the account by editing the profile settings, as shown below.
-   <img alt="Snowflake Edit Profile" src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snokeflakes_user_profile.png" width="100%"/>
-   <img alt="Snowflake set default warehouse" src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snowflakes_set_default_warehouse.png" width="75%" style='border:1px solid #000000'/>
+   <img alt="Snowflake Edit Profile" src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snokeflakes_user_profile.png" style="border:1px solid #000000; width:100%"/>
+   <img alt="Snowflake set default warehouse" src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snowflakes_set_default_warehouse.png" style="border:1px solid #000000; width:100%"/>
 
 *NOTE* If you do not set a default warehouse, you must specify the warehouse name when you create a connection to the Snowflake database.
 
 5. Go to the **Databases** tab under the **Data** section and click **+ Database** to create a new database, as shown below.
-   <img alt="Snowflake Database" src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snowflakes_create_database.png" width="75%" style='border:1px solid #000000'/>
+   <img alt="Snowflake Database" src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snowflakes_create_database.png" style="border:1px solid #000000; width:100%"/>
 
 *NOTE* Create a database can either be created using the Snowflake web interface or using the SQL command with the Snowflake connector.
 
