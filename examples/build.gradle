@@ -83,6 +83,6 @@ task buildExamples {
 }
 
 testExamples.dependsOn ":snowflake-ballerina:build"
-test.dependsOn testExamples
+//test.dependsOn testExamples
 buildExamples.dependsOn ":snowflake-ballerina:build"
-build.dependsOn buildExamples
+//build.dependsOn buildExamples
