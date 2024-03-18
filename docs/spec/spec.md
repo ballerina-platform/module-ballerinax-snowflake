@@ -1,6 +1,6 @@
 # Specification: Ballerina Snowflake Library
 
-_Owners_: @daneshk  
+_Authors_: @daneshk  
 _Reviewers_: @bhashinee, @sahanhe  
 _Created_: 2024/01/08   
 _Updated_: 2024/01/08  

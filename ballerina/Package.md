@@ -68,13 +68,7 @@ import ballerinax/snowflake.driver as _;
 
 Create a Snowflake client endpoint by giving authentication details in the Snowflake configuration.
 ```ballerina
-Options options = {
-    properties: {
-        "JDBC_QUERY_RESULT_FORMAT": "JSON" // Optional. This property is used to specify the format of the query result.
-    }
-};
-
-snowflake:Client snowflakeClient = check new(accountIdentifier, user, password, options);
+snowflake:Client snowflakeClient = check new(accountIdentifier, user, password);
 ```
 
 ### Step 4: Invoke the connector operation
