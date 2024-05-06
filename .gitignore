@@ -54,3 +54,6 @@ ballerina/lib/*.jar
 
 # Ignore bin directory
 native/bin
+
+# Ignore deb file
+*.deb
