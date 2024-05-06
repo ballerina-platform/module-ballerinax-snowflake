@@ -14,5 +14,4 @@ jobs:
     with:
       package-name: snowflake
       package-org: ballerinax
-      additional-build-flags: "-x :snowflake-examples:build"
-      
+      additional-build-flags: "-x test"
