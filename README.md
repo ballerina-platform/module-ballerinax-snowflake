@@ -140,7 +140,7 @@ This repository only contains the source code for the package.
 
 ### Setting up the prerequisites
 
-1. Download and install Java SE Development Kit (JDK) version 17. You can install either [OpenJDK](https://adoptopenjdk.net/) or [Oracle](https://www.oracle.com/java/technologies/downloads/).
+1. Download and install Java SE Development Kit (JDK) version 21. You can install either [OpenJDK](https://adoptopenjdk.net/) or [Oracle](https://www.oracle.com/java/technologies/downloads/).
 
     > **Note:** Set the JAVA_HOME environment variable to the path name of the directory into which you installed JDK.
 
