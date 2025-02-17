@@ -15,11 +15,11 @@ graalvmCompatible = true
 [[platform.java21.dependency]]
 groupId = "io.ballerina.lib"
 artifactId = "snowflake-native"
-version = "2.1.0-SNAPSHOT"
-path = "../native/build/libs/snowflake-native-2.1.0-SNAPSHOT.jar"
+version = "2.1.0"
+path = "../native/build/libs/snowflake-native-2.1.0.jar"
 
 [[platform.java21.dependency]]
 groupId = "io.ballerina.stdlib"
 artifactId = "sql-native"
-version = "1.15.0-20241218-171100-16f31a4"
-path = "./lib/sql-native-1.15.0-20241218-171100-16f31a4.jar"
+version = "1.15.0"
+path = "./lib/sql-native-1.15.0.jar"
