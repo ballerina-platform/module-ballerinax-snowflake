@@ -50,3 +50,9 @@ build
 
 # Ignore lib
 lib
+
+# Ignore vscode
+.vscode
+
+# Ignore native bin directory
+native/bin
