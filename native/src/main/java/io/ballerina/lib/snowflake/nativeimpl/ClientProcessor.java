@@ -1,28 +1,28 @@
 /*
- * Copyright (c) 2022, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- * WSO2 Inc. licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright (c) 2022, WSO2 LLC. (http://www.wso2.com) All Rights Reserved.
+//
+// WSO2 LLC. licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except
+// in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
  */
  
-package io.ballerina.stdlib.java.jdbc.nativeimpl;
+package io.ballerina.lib.snowflake.nativeimpl;
 
+import io.ballerina.lib.snowflake.Constants;
 import io.ballerina.runtime.api.creators.ValueCreator;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
-import io.ballerina.stdlib.java.jdbc.Constants;
 import io.ballerina.stdlib.sql.datasource.SQLDatasource;
 import io.ballerina.stdlib.sql.utils.ErrorGenerator;
 
@@ -47,7 +47,6 @@ public class ClientProcessor {
         BString passwordVal = clientConfig.getStringValue(Constants.ClientConfiguration.PASSWORD);
         String password = passwordVal == null ? null : passwordVal.getValue();
         String datasourceName = null;
-        String requestGeneratedKeys = Constants.RequestGeneratedKeysValues.ALL;
 
         BMap options = clientConfig.getMapValue(Constants.ClientConfiguration.OPTIONS);
         BMap<BString, Object> properties = ValueCreator.createMapValue();
@@ -57,10 +56,6 @@ public class ClientProcessor {
             properties = options.getMapValue(Constants.ClientConfiguration.PROPERTIES);
             BString dataSourceNamVal = options.getStringValue(Constants.ClientConfiguration.DATASOURCE_NAME);
             datasourceName = dataSourceNamVal == null ? null : dataSourceNamVal.getValue();
-            BString requestGeneratedKeysVal = options.getStringValue(
-                    Constants.ClientConfiguration.REQUEST_GENERATED_KEYS);
-            requestGeneratedKeys = requestGeneratedKeysVal == null ?
-                    Constants.RequestGeneratedKeysValues.ALL : requestGeneratedKeysVal.getValue();
             if (properties != null) {
                 for (Object propKey : properties.getKeys()) {
                     if (propKey.toString().toLowerCase(Locale.ENGLISH).matches(Constants.CONNECT_TIMEOUT)) {
@@ -85,20 +80,6 @@ public class ClientProcessor {
 
         boolean executeGKFlag = false;
         boolean batchExecuteGKFlag = false;
-        switch (requestGeneratedKeys) {
-            case Constants.RequestGeneratedKeysValues.EXECUTE:
-                executeGKFlag = true;
-                break;
-            case Constants.RequestGeneratedKeysValues.BATCH_EXECUTE:
-                batchExecuteGKFlag = true;
-                break;
-            case Constants.RequestGeneratedKeysValues.ALL:
-                executeGKFlag = true;
-                batchExecuteGKFlag = true;
-                break;
-            default:
-                break;
-        }
 
         return io.ballerina.stdlib.sql.nativeimpl.ClientProcessor.createClient(client, sqlDatasourceParams,
                                                                                executeGKFlag, batchExecuteGKFlag);

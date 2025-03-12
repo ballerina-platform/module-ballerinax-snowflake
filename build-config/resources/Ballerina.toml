@@ -7,18 +7,18 @@ keywords = ["IT Operations/Cloud Services", "Cost/Paid"]
 repository = "https://github.com/ballerina-platform/module-ballerinax-snowflake"
 icon = "icon.png"
 license = ["Apache-2.0"]
-distribution = "2201.7.0"
+distribution = "2201.11.0-20241218-101200-109f6cc7"
 
-[platform.java11]
+[platform.java21]
 graalvmCompatible = true
 
-[[platform.java11.dependency]]
-groupId = "io.ballerina.stdlib"
+[[platform.java21.dependency]]
+groupId = "io.ballerina.lib"
 artifactId = "snowflake-native"
 version = "@project.version@"
 path = "../native/build/libs/snowflake-native-@project.version@.jar"
 
-[[platform.java11.dependency]]
+[[platform.java21.dependency]]
 groupId = "io.ballerina.stdlib"
 artifactId = "sql-native"
 version = "@sql.native.version@"

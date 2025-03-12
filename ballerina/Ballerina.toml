@@ -1,25 +1,25 @@
 [package]
 org = "ballerinax"
 name = "snowflake"
-version = "1.2.2"
+version = "2.1.0"
 authors = ["Ballerina"]
 keywords = ["IT Operations/Cloud Services", "Cost/Paid"]
 repository = "https://github.com/ballerina-platform/module-ballerinax-snowflake"
 icon = "icon.png"
 license = ["Apache-2.0"]
-distribution = "2201.7.0"
+distribution = "2201.11.0-20241218-101200-109f6cc7"
 
-[platform.java11]
+[platform.java21]
 graalvmCompatible = true
 
-[[platform.java11.dependency]]
-groupId = "io.ballerina.stdlib"
+[[platform.java21.dependency]]
+groupId = "io.ballerina.lib"
 artifactId = "snowflake-native"
-version = "1.2.2-SNAPSHOT"
-path = "../native/build/libs/snowflake-native-1.2.2-SNAPSHOT.jar"
+version = "2.1.0"
+path = "../native/build/libs/snowflake-native-2.1.0.jar"
 
-[[platform.java11.dependency]]
+[[platform.java21.dependency]]
 groupId = "io.ballerina.stdlib"
 artifactId = "sql-native"
-version = "1.11.1"
-path = "./lib/sql-native-1.11.1.jar"
+version = "1.15.0"
+path = "./lib/sql-native-1.15.0.jar"
