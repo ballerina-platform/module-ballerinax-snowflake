@@ -21,8 +21,8 @@ path = "../native/build/libs/snowflake-native-2.1.1-SNAPSHOT.jar"
 [[platform.java21.dependency]]
 groupId = "io.ballerina.stdlib"
 artifactId = "sql-native"
-version = "1.15.0"
-path = "./lib/sql-native-1.15.0.jar"
+version = "1.15.1-20250317-200100-ffe5c03"
+path = "./lib/sql-native-1.15.1-20250317-200100-ffe5c03.jar"
 
 [[platform.java21.dependency]]
 groupId = "org.bouncycastle"
