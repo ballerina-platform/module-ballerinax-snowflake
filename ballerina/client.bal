@@ -128,10 +128,10 @@ type ClientConfiguration record {|
 |};
 
 # Represents the authentication configuration for the Snowflake client.
-type AuthConfig BasicAuth|KeyBasedAuth;
+public type AuthConfig BasicAuth|KeyBasedAuth;
 
 # Represents the basic authentication configuration for the Snowflake client.
-type BasicAuth record {
+public type BasicAuth record {
     # The username of the Snowflake account
     string user;
     # The password of the Snowflake account
@@ -139,7 +139,7 @@ type BasicAuth record {
 };
 
 # Represents the key-based authentication configuration for the Snowflake client.
-type KeyBasedAuth record {
+public type KeyBasedAuth record {
     # The username of the Snowflake account
     string user;
     # The path to the private key file. The private key file must be in the PKCS#8 format.
