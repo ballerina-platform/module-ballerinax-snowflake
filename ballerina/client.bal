@@ -34,12 +34,7 @@ public isolated client class Client {
     public isolated function init(string account_identifier, string user, string password,
         Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         string url = string `jdbc:snowflake://${account_identifier}.snowflakecomputing.com/`;
-        ClientConfiguration clientConf = {
-            url: url,
-            authConfig: { user, password },
-            options: options,
-            connectionPool: connectionPool
-        };
+        ClientConfiguration clientConf = {url, authConfig: { user, password }, options, connectionPool};
         return createClient(self, clientConf, sql:getGlobalConnectionPool());
     }
 

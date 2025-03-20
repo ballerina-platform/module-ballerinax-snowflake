@@ -28,9 +28,6 @@ import io.ballerina.runtime.api.values.BString;
 import io.ballerina.stdlib.sql.datasource.SQLDatasource;
 import io.ballerina.stdlib.sql.utils.ErrorGenerator;
 
-//import java.nio.file.Files;
-//import java.nio.file.Paths;
-//import java.util.Base64;
 import java.util.Locale;
 import java.util.Properties;
 
