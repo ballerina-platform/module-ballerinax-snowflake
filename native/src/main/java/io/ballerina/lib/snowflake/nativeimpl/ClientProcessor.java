@@ -20,14 +20,22 @@ package io.ballerina.lib.snowflake.nativeimpl;
 
 import io.ballerina.lib.snowflake.Constants;
 import io.ballerina.runtime.api.creators.ValueCreator;
+import io.ballerina.runtime.api.utils.StringUtils;
+import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.stdlib.sql.datasource.SQLDatasource;
 import io.ballerina.stdlib.sql.utils.ErrorGenerator;
 
+//import java.nio.file.Files;
+//import java.nio.file.Paths;
+//import java.util.Base64;
 import java.util.Locale;
 import java.util.Properties;
+
+import static io.ballerina.lib.snowflake.Constants.ClientConfiguration.BASIC_AUTH_TYPE;
+import static io.ballerina.lib.snowflake.Constants.ClientConfiguration.KEY_BASED_AUTH_TYPE;
 
 /**
  * This class will include the native method implementation for the JDBC client.
@@ -42,26 +50,22 @@ public class ClientProcessor {
         if (!isJdbcUrlValid(url)) {
             return ErrorGenerator.getSQLApplicationError("Invalid JDBC URL: " + url);
         }
-        BString userVal = clientConfig.getStringValue(Constants.ClientConfiguration.USER);
-        String user = userVal == null ? null : userVal.getValue();
-        BString passwordVal = clientConfig.getStringValue(Constants.ClientConfiguration.PASSWORD);
-        String password = passwordVal == null ? null : passwordVal.getValue();
-        String datasourceName = null;
 
         BMap options = clientConfig.getMapValue(Constants.ClientConfiguration.OPTIONS);
         BMap<BString, Object> properties = ValueCreator.createMapValue();
         Properties poolProperties = null;
 
+        String datasourceName = null;
         if (options != null) {
             properties = options.getMapValue(Constants.ClientConfiguration.PROPERTIES);
             BString dataSourceNamVal = options.getStringValue(Constants.ClientConfiguration.DATASOURCE_NAME);
             datasourceName = dataSourceNamVal == null ? null : dataSourceNamVal.getValue();
             if (properties != null) {
-                for (Object propKey : properties.getKeys()) {
-                    if (propKey.toString().toLowerCase(Locale.ENGLISH).matches(Constants.CONNECT_TIMEOUT)) {
+                for (BString propKey : properties.getKeys()) {
+                    if (propKey.getValue().toLowerCase(Locale.ENGLISH).matches(Constants.CONNECT_TIMEOUT)) {
                         poolProperties = new Properties();
                         poolProperties.setProperty(Constants.POOL_CONNECTION_TIMEOUT,
-                                                   properties.getStringValue((BString) propKey).getValue());
+                                properties.getStringValue(propKey).getValue());
                     }
                 }
             }
@@ -69,14 +73,46 @@ public class ClientProcessor {
 
         BMap connectionPool = clientConfig.getMapValue(Constants.ClientConfiguration.CONNECTION_POOL_OPTIONS);
 
-        SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
-                .setUrl(url)
-                .setUser(user)
-                .setPassword(password)
-                .setDatasourceName(datasourceName)
-                .setOptions(properties)
-                .setPoolProperties(poolProperties)
-                .setConnectionPool(connectionPool, globalPool);
+        BMap authConfigs = clientConfig.getMapValue(Constants.ClientConfiguration.AUTH_CONFIG);
+        String authType = TypeUtils.getType(authConfigs).getName();
+
+        SQLDatasource.SQLDatasourceParams sqlDatasourceParams;
+        BString userVal = authConfigs.getStringValue(Constants.ClientConfiguration.USER);
+        String user = userVal == null ? null : userVal.getValue();
+
+        if (BASIC_AUTH_TYPE.equals(authType)) {
+            BString passwordVal = authConfigs.getStringValue(Constants.ClientConfiguration.PASSWORD);
+            String password = passwordVal == null ? null : passwordVal.getValue();
+
+            sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
+                    .setUrl(url)
+                    .setUser(user)
+                    .setPassword(password)
+                    .setDatasourceName(datasourceName)
+                    .setOptions(properties)
+                    .setPoolProperties(poolProperties)
+                    .setConnectionPool(connectionPool, globalPool);
+        } else if (KEY_BASED_AUTH_TYPE.equals((authType))) {
+            BString privateKeyPathValue = authConfigs.getStringValue(StringUtils.fromString("privateKeyPath"));
+            BString keyPassphraseValue = authConfigs.getStringValue(StringUtils.fromString("privateKeyPassphrase"));
+            if (properties != null) {
+                properties.put(StringUtils.fromString("private_key_file"), privateKeyPathValue);
+                properties.put(StringUtils.fromString("private_key_file_pwd"), keyPassphraseValue);
+            } else {
+                properties = ValueCreator.createMapValue();
+                properties.put(StringUtils.fromString("private_key_file"), privateKeyPathValue);
+                properties.put(StringUtils.fromString("private_key_file_pwd"), keyPassphraseValue);
+            }
+            sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
+                    .setUrl(url)
+                    .setUser(user)
+                    .setDatasourceName(datasourceName)
+                    .setOptions(properties)
+                    .setPoolProperties(poolProperties)
+                    .setConnectionPool(connectionPool, globalPool);
+        } else {
+            return ErrorGenerator.getSQLApplicationError("Invalid Auth Type: " + authType);
+        }
 
         boolean executeGKFlag = false;
         boolean batchExecuteGKFlag = false;

@@ -44,6 +44,8 @@ SQL statements to the database.
 Each client represents a pool of connections to the database. The pool of connections is maintained throughout the lifetime of the client.
 
 **Initialization of the Client:**
+
+The Snowflake default client is for the basic authentication method. The client can be initialized as follows:
 ```ballerina
 # Initializes the Snowflake Client. The client must be kept open throughout the application lifetime.
 #
@@ -57,7 +59,45 @@ Each client represents a pool of connections to the database. The pool of connec
 public isolated function init(string account_identifier, string user, string password, Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error?;
 ```
 
-**Configurations available for initializing the Snowflake client:**
+Additionally, the Snowflake connector has an Advanced client, which allows the user to use other authentication methods such as public/private key authentication, etc. Right now, the Advanced client supports only Basic authentication and Key based authentication, but it can be extended to support other authentication methods in the future.
+The Advanced client can be initialized as follows:
+```ballerina
+ # Initializes the Snowflake Advanced Client. This client aliows to authenticate using basic authentication and private key based authentication.
+ # The client must be kept open throughout the application lifetime.
+ #
+ # + account_identifier - The Snowflake account identifier
+ # + authConfig - The authentication configuration for the Snowflake account
+ # + options - The Snowflake client properties
+ # + connectionPool - The `sql:ConnectionPool` to be used for the connection. If there is no
+ #                    `connectionPool` provided, the global connection pool (shared by all clients) will be used
+ # + return - An `sql:Error` if the client creation fails
+ public isolated function init(string account_identifier, AuthConfig authConfig, Options? options = (),
+ sql:ConnectionPool? connectionPool = ()) returns sql:Error?;
+ 
+# Represents the authentication configuration for the Snowflake client.
+type AuthConfig BasicAuth|KeyBasedAuth;
+
+# Represents the basic authentication configuration for the Snowflake client.
+type BasicAuth record {
+    # The username of the Snowflake account
+    string user;
+    # The password of the Snowflake account
+    string password;
+};
+
+# Represents the key-based authentication configuration for the Snowflake client.
+type KeyBasedAuth record {
+    # The username of the Snowflake account
+    string user;
+    # The path to the private key file. The private key file must be in the PKCS#8 format.
+    # Use forward slashes as file path separators on all operating systems, including Windows. The JDBC driver replaces forward slashes with the appropriate path separator for the platform.
+    string privateKeyPath;
+    # The passphrase for the private key file. If the private key file is encrypted, provide the passphrase to decrypt the file.
+    string privateKeyPassphrase?;
+};
+```
+
+**Additional configurations available for initializing the Snowflake client:**
 * Connection properties:
 ```ballerina
 # An additional set of configurations related to a database connection.
