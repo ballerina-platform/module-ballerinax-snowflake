@@ -30,8 +30,8 @@ Options options = {
 // Initialize the Snowflake client
 Client snowflakeClient = check new (accountIdentifier, user, password, options);
 AuthConfig authConfig = {
-    user: user,
-    privateKeyPath: privateKeyPath,
-    privateKeyPassphrase: privateKeyPassphrase
+    user,
+    privateKeyPath,
+    privateKeyPassphrase
 };
 AdvancedClient snowflakeKeyBasedClient = check new (accountIdentifier, authConfig, options);

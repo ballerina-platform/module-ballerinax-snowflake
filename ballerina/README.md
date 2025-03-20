@@ -93,9 +93,9 @@ snowflake:Client snowflakeClient = check new(accountIdentifier, user, password);
 If you are using key-pair authentication, you can create a Snowflake client endpoint as follows:
 ```ballerina
 AuthConfig authConfig = {
-    user: user,
-    privateKeyPath: privateKeyPath,
-    privateKeyPassphrase: privateKeyPassphrase
+    user,
+    privateKeyPath,
+    privateKeyPassphrase
 };
 snowflake:AdvancedClient snowflakeKeyBasedClient = check new (accountIdentifier, authConfig, options);
 ```
