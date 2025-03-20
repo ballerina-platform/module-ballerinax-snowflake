@@ -24,12 +24,12 @@ artifactId = "sql-native"
 version = "1.15.0"
 path = "./lib/sql-native-1.15.0.jar"
 
-[[platform.java21.dependency]]
-groupId = "org.bouncycastle"
-artifactId = "bcprov-jdk18on"
-version = "1.80"
-
-[[platform.java21.dependency]]
-groupId = "org.bouncycastle"
-artifactId = "bcpkix-jdk18on"
-version = "1.80"
+#[[platform.java21.dependency]]
+#groupId = "org.bouncycastle"
+#artifactId = "bcprov-jdk18on"
+#version = "1.80"
+#
+#[[platform.java21.dependency]]
+#groupId = "org.bouncycastle"
+#artifactId = "bcpkix-jdk18on"
+#version = "1.80"
