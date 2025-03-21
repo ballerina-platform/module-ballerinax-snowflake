@@ -32,7 +32,11 @@ import java.util.Locale;
 import java.util.Properties;
 
 import static io.ballerina.lib.snowflake.Constants.ClientConfiguration.BASIC_AUTH_TYPE;
+import static io.ballerina.lib.snowflake.Constants.ClientConfiguration.CONFIG_PRIVATE_KEY_PASSPHRASE;
+import static io.ballerina.lib.snowflake.Constants.ClientConfiguration.CONFIG_PRIVATE_KEY_PATH;
 import static io.ballerina.lib.snowflake.Constants.ClientConfiguration.KEY_BASED_AUTH_TYPE;
+import static io.ballerina.lib.snowflake.Constants.ClientConfiguration.PROPERTY_PRIVATE_KEY_FILE;
+import static io.ballerina.lib.snowflake.Constants.ClientConfiguration.PROPERTY_PRIVATE_KEY_FILE_PWD;
 
 /**
  * This class will include the native method implementation for the JDBC client.
@@ -40,11 +44,6 @@ import static io.ballerina.lib.snowflake.Constants.ClientConfiguration.KEY_BASED
  * @since 1.0.0
  */
 public class ClientProcessor {
-
-    public static final String CONFIG_PRIVATE_KEY_PATH = "privateKeyPath";
-    public static final String CONFIG_PRIVATE_KEY_PASSPHRASE = "privateKeyPassphrase";
-    public static final String PROPERTY_PRIVATE_KEY_FILE = "private_key_file";
-    public static final String PROPERTY_PRIVATE_KEY_FILE_PWD = "private_key_file_pwd";
 
     public static Object createClient(BObject client, BMap<BString, Object> clientConfig,
                                       BMap<BString, Object> globalPool) {
@@ -95,8 +94,10 @@ public class ClientProcessor {
                     .setUser(user)
                     .setPassword(password);
         } else if (KEY_BASED_AUTH_TYPE.equals((authType))) {
-            BString privateKeyPathValue = authConfigs.getStringValue(StringUtils.fromString(CONFIG_PRIVATE_KEY_PATH));
-            BString keyPassphraseValue = authConfigs.getStringValue(StringUtils.fromString(CONFIG_PRIVATE_KEY_PASSPHRASE));
+            BString privateKeyPathValue = authConfigs.getStringValue(
+                    StringUtils.fromString(CONFIG_PRIVATE_KEY_PATH));
+            BString keyPassphraseValue = authConfigs.getStringValue(
+                    StringUtils.fromString(CONFIG_PRIVATE_KEY_PASSPHRASE));
             properties.put(StringUtils.fromString(PROPERTY_PRIVATE_KEY_FILE), privateKeyPathValue);
             properties.put(StringUtils.fromString(PROPERTY_PRIVATE_KEY_FILE_PWD), keyPassphraseValue);
             sqlDatasourceParams = sqlDatasourceParams

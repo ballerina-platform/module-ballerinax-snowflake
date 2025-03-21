@@ -33,7 +33,7 @@ public isolated client class AdvancedClient {
     # + return - An `sql:Error` if the client creation fails
     public isolated function init(string accountIdentifier, AuthConfig authConfig, Options? options = (),
     sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
-        string url = string `jdbc:snowflake://${account_identifier}.snowflakecomputing.com/`;
+        string url = string `jdbc:snowflake://${accountIdentifier}.snowflakecomputing.com/`;
         ClientConfiguration clientConf = {url, authConfig, options, connectionPool};
         return createClient(self, clientConf, sql:getGlobalConnectionPool());
     }

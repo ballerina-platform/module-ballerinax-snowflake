@@ -42,6 +42,11 @@ public final class Constants {
         public static final String BASIC_AUTH_TYPE = "BasicAuth";
         public static final String KEY_BASED_AUTH_TYPE = "KeyBasedAuth";
         public static final BString PROPERTIES = StringUtils.fromString("properties");
+
+        public static final String CONFIG_PRIVATE_KEY_PATH = "privateKeyPath";
+        public static final String CONFIG_PRIVATE_KEY_PASSPHRASE = "privateKeyPassphrase";
+        public static final String PROPERTY_PRIVATE_KEY_FILE = "private_key_file";
+        public static final String PROPERTY_PRIVATE_KEY_FILE_PWD = "private_key_file_pwd";
     }
 
     public static final String CONNECT_TIMEOUT = ".*(connect).*(timeout).*";
