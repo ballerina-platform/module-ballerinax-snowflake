@@ -29,6 +29,28 @@ To use the Snowflake connector, you must have a valid Snowflake account. If you 
 
 *NOTE* Create a database can either be created using the Snowflake web interface or using the SQL command with the Snowflake connector.
 
+### Configure key-pair authentication
+
+To use the Snowflake connector with key-pair authentication, you must have a public/private key pair. You can generate a key pair using the following command:
+
+1. Generate the private key using the following command:
+```shell
+openssl genrsa 2048 | openssl pkcs8 -topk8 -v2 aes256 -inform PEM -out key-aes256.p8
+```
+*NOTE* 3DES is not supported by the Ballerina Snowflake connector. Therefore, you must use the `-v2 aes256` option to generate the private key.
+
+2. Generate the public key using the following command:
+```shell
+openssl rsa -in key-aes256.p8 -pubout -out key-aes256.pub
+```
+
+3. Copy the public and private key files to a local directory for storage. Record the path to the files. Note that the private key is stored using the PKCS#8 (Public Key Cryptography Standards) format and is encrypted using the passphrase you specified in the previous step.
+
+4. Assign the public key to a Snowflake user by executing the following an ALTER USER command:
+```sql
+ALTER USER example_user SET RSA_PUBLIC_KEY='MIIBIjANBgkqh...';
+```
+
 ## Quickstart
 
 To use the snowflake connector in your Ballerina application, modify the .bal file as follows:
@@ -66,6 +88,16 @@ import ballerinax/snowflake.driver as _;
 Create a Snowflake client endpoint by giving authentication details in the Snowflake configuration.
 ```ballerina
 snowflake:Client snowflakeClient = check new(accountIdentifier, user, password);
+```
+
+If you are using key-pair authentication, you can create a Snowflake client endpoint as follows:
+```ballerina
+AuthConfig authConfig = {
+    user: "ballerina"
+    privateKeyPath: "path/to/privatekey.p8"
+    privateKeyPassphrase: "ballerina"
+};
+snowflake:AdvancedClient snowflakeKeyBasedClient = check new (accountIdentifier, authConfig, options);
 ```
 
 ### Step 4: Invoke the connector operation

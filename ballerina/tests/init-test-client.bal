@@ -18,6 +18,8 @@
 configurable string accountIdentifier = ?;
 configurable string user = ?;
 configurable string password = ?;
+configurable string privateKeyPath = ?;
+configurable string privateKeyPassphrase = ?;
 
 Options options = {
     properties: {
@@ -27,3 +29,9 @@ Options options = {
 
 // Initialize the Snowflake client
 Client snowflakeClient = check new (accountIdentifier, user, password, options);
+AuthConfig authConfig = {
+    user,
+    privateKeyPath,
+    privateKeyPassphrase
+};
+AdvancedClient snowflakeKeyBasedClient = check new (accountIdentifier, authConfig, options);
