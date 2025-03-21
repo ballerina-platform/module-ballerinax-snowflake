@@ -131,15 +131,15 @@ type ClientConfiguration record {|
 public type AuthConfig BasicAuth|KeyBasedAuth;
 
 # Represents the basic authentication configuration for the Snowflake client.
-public type BasicAuth record {
+public type BasicAuth record {|
     # The username of the Snowflake account
     string user;
     # The password of the Snowflake account
     string password;
-};
+|};
 
 # Represents the key-based authentication configuration for the Snowflake client.
-public type KeyBasedAuth record {
+public type KeyBasedAuth record {|
     # The username of the Snowflake account
     string user;
     # The path to the private key file. The private key file must be in the PKCS#8 format.
@@ -147,7 +147,7 @@ public type KeyBasedAuth record {
     string privateKeyPath;
     # The passphrase for the private key file. If the private key file is encrypted, provide the passphrase to decrypt the file.
     string privateKeyPassphrase?;
-};
+|};
 
 isolated function createClient(Client jdbcClient, ClientConfiguration clientConf,
     sql:ConnectionPool globalConnPool) returns sql:Error? = @java:Method {

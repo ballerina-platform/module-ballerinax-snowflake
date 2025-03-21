@@ -31,7 +31,7 @@ public isolated client class AdvancedClient {
     # + connectionPool - The `sql:ConnectionPool` to be used for the connection. If there is no
     #                    `connectionPool` provided, the global connection pool (shared by all clients) will be used
     # + return - An `sql:Error` if the client creation fails
-    public isolated function init(string account_identifier, AuthConfig authConfig, Options? options = (),
+    public isolated function init(string accountIdentifier, AuthConfig authConfig, Options? options = (),
     sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         string url = string `jdbc:snowflake://${account_identifier}.snowflakecomputing.com/`;
         ClientConfiguration clientConf = {url, authConfig, options, connectionPool};

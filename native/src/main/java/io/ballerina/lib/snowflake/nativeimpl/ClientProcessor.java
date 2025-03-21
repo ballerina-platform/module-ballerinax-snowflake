@@ -41,6 +41,11 @@ import static io.ballerina.lib.snowflake.Constants.ClientConfiguration.KEY_BASED
  */
 public class ClientProcessor {
 
+    public static final String CONFIG_PRIVATE_KEY_PATH = "privateKeyPath";
+    public static final String CONFIG_PRIVATE_KEY_PASSPHRASE = "privateKeyPassphrase";
+    public static final String PROPERTY_PRIVATE_KEY_FILE = "private_key_file";
+    public static final String PROPERTY_PRIVATE_KEY_FILE_PWD = "private_key_file_pwd";
+
     public static Object createClient(BObject client, BMap<BString, Object> clientConfig,
                                       BMap<BString, Object> globalPool) {
         String url = clientConfig.getStringValue(Constants.ClientConfiguration.URL).getValue();
@@ -54,17 +59,18 @@ public class ClientProcessor {
 
         String datasourceName = null;
         if (options != null) {
-            properties = options.getMapValue(Constants.ClientConfiguration.PROPERTIES);
+            BMap<BString, Object> optionProperties = options.getMapValue(Constants.ClientConfiguration.PROPERTIES);
             BString dataSourceNamVal = options.getStringValue(Constants.ClientConfiguration.DATASOURCE_NAME);
             datasourceName = dataSourceNamVal == null ? null : dataSourceNamVal.getValue();
-            if (properties != null) {
-                for (BString propKey : properties.getKeys()) {
+            if (optionProperties != null) {
+                for (BString propKey : optionProperties.getKeys()) {
                     if (propKey.getValue().toLowerCase(Locale.ENGLISH).matches(Constants.CONNECT_TIMEOUT)) {
                         poolProperties = new Properties();
                         poolProperties.setProperty(Constants.POOL_CONNECTION_TIMEOUT,
-                                properties.getStringValue(propKey).getValue());
+                                optionProperties.getStringValue(propKey).getValue());
                     }
                 }
+                properties = optionProperties;
             }
         }
 
@@ -73,40 +79,29 @@ public class ClientProcessor {
         BMap authConfigs = clientConfig.getMapValue(Constants.ClientConfiguration.AUTH_CONFIG);
         String authType = TypeUtils.getType(authConfigs).getName();
 
-        SQLDatasource.SQLDatasourceParams sqlDatasourceParams;
         BString userVal = authConfigs.getStringValue(Constants.ClientConfiguration.USER);
         String user = userVal == null ? null : userVal.getValue();
-
+        SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
+                .setUrl(url)
+                .setDatasourceName(datasourceName)
+                .setOptions(properties)
+                .setPoolProperties(poolProperties)
+                .setConnectionPool(connectionPool, globalPool);
         if (BASIC_AUTH_TYPE.equals(authType)) {
             BString passwordVal = authConfigs.getStringValue(Constants.ClientConfiguration.PASSWORD);
             String password = passwordVal == null ? null : passwordVal.getValue();
 
-            sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
-                    .setUrl(url)
+            sqlDatasourceParams = sqlDatasourceParams
                     .setUser(user)
-                    .setPassword(password)
-                    .setDatasourceName(datasourceName)
-                    .setOptions(properties)
-                    .setPoolProperties(poolProperties)
-                    .setConnectionPool(connectionPool, globalPool);
+                    .setPassword(password);
         } else if (KEY_BASED_AUTH_TYPE.equals((authType))) {
-            BString privateKeyPathValue = authConfigs.getStringValue(StringUtils.fromString("privateKeyPath"));
-            BString keyPassphraseValue = authConfigs.getStringValue(StringUtils.fromString("privateKeyPassphrase"));
-            if (properties != null) {
-                properties.put(StringUtils.fromString("private_key_file"), privateKeyPathValue);
-                properties.put(StringUtils.fromString("private_key_file_pwd"), keyPassphraseValue);
-            } else {
-                properties = ValueCreator.createMapValue();
-                properties.put(StringUtils.fromString("private_key_file"), privateKeyPathValue);
-                properties.put(StringUtils.fromString("private_key_file_pwd"), keyPassphraseValue);
-            }
-            sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
-                    .setUrl(url)
+            BString privateKeyPathValue = authConfigs.getStringValue(StringUtils.fromString(CONFIG_PRIVATE_KEY_PATH));
+            BString keyPassphraseValue = authConfigs.getStringValue(StringUtils.fromString(CONFIG_PRIVATE_KEY_PASSPHRASE));
+            properties.put(StringUtils.fromString(PROPERTY_PRIVATE_KEY_FILE), privateKeyPathValue);
+            properties.put(StringUtils.fromString(PROPERTY_PRIVATE_KEY_FILE_PWD), keyPassphraseValue);
+            sqlDatasourceParams = sqlDatasourceParams
                     .setUser(user)
-                    .setDatasourceName(datasourceName)
-                    .setOptions(properties)
-                    .setPoolProperties(poolProperties)
-                    .setConnectionPool(connectionPool, globalPool);
+                    .setOptions(properties);
         } else {
             return ErrorGenerator.getSQLApplicationError("Invalid Auth Type: " + authType);
         }
