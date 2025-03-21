@@ -45,7 +45,7 @@ Each client represents a pool of connections to the database. The pool of connec
 
 **Initialization of the Client:**
 
-The Snowflake default client is for the basic authentication method. The client can be initialized as follows:
+The Snowflake default client is for the basic authentication method. The client definition is as follows:
 ```ballerina
 # Initializes the Snowflake Client. The client must be kept open throughout the application lifetime.
 #
@@ -60,7 +60,7 @@ public isolated function init(string account_identifier, string user, string pas
 ```
 
 Additionally, the Snowflake connector has an Advanced client, which allows the user to use other authentication methods such as public/private key authentication, etc. Right now, the Advanced client supports only Basic authentication and Key based authentication, but it can be extended to support other authentication methods in the future.
-The Advanced client can be initialized as follows:
+The Advanced client definition is as follows:
 ```ballerina
  # Initializes the Snowflake Advanced Client. This client aliows to authenticate using basic authentication and private key based authentication.
  # The client must be kept open throughout the application lifetime.
@@ -71,7 +71,7 @@ The Advanced client can be initialized as follows:
  # + connectionPool - The `sql:ConnectionPool` to be used for the connection. If there is no
  #                    `connectionPool` provided, the global connection pool (shared by all clients) will be used
  # + return - An `sql:Error` if the client creation fails
- public isolated function init(string account_identifier, AuthConfig authConfig, Options? options = (),
+ public isolated function init(string accountIdentifier, AuthConfig authConfig, Options? options = (),
  sql:ConnectionPool? connectionPool = ()) returns sql:Error?;
  
 # Represents the authentication configuration for the Snowflake client.
