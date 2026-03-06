@@ -22,12 +22,12 @@ To use the Snowflake connector, you must have a valid Snowflake account. If you 
    ![Snowflake Edit Profile](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snokeflakes_user_profile.png)
    ![Snowflake set default warehouse](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snowflakes_set_default_warehouse.png)
 
-*NOTE* If you do not set a default warehouse, you must specify the warehouse name when you create a connection to the Snowflake database.
+> **NOTE**: If you do not set a default warehouse, you must specify the warehouse name when you create a connection to the Snowflake database.
 
 5. Go to the **Databases** tab under the **Data** section and click **+ Database** to create a new database, as shown below.
    ![Snowflake Database](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-snowflake/main/docs/setup/resources/snowflakes_create_database.png)
 
-*NOTE* Create a database can either be created using the Snowflake web interface or using the SQL command with the Snowflake connector.
+> **NOTE**: Create a database can either be created using the Snowflake web interface or using the SQL command with the Snowflake connector.
 
 ### Configure key-pair authentication
 
@@ -37,7 +37,7 @@ To use the Snowflake connector with key-pair authentication, you must have a pub
 ```shell
 openssl genrsa 2048 | openssl pkcs8 -topk8 -v2 aes256 -inform PEM -out key-aes256.p8
 ```
-*NOTE* 3DES is not supported by the Ballerina Snowflake connector. Therefore, you must use the `-v2 aes256` option to generate the private key.
+> **NOTE**: 3DES is not supported by the Ballerina Snowflake connector. Therefore, you must use the `-v2 aes256` option to generate the private key.
 
 2. Generate the public key using the following command:
 ```shell
@@ -70,20 +70,20 @@ import ballerinax/snowflake.driver as _;
 
 ### Step 3: Instantiate a new connector
 
-*NOTE:* Snowflake driver fails with Java 16 and above because starting with JDK 16, strong encapsulation was turned on by default and one of the driver dependencies have employed the use of sun.misc.Unsafe along with reflection. This is not allowed in Java 16 and above. Therefore, to run this example, you need to use Java 15 or below. For more information, see [here](https://community.snowflake.com/s/article/JDBC-Driver-Compatibility-Issue-With-JDK-16-and-Later). If you are using Java 16 or above, you can use the following workaround to work with the Snowflake connector:
-
-* Export the following environment variable:
-  ```shell
-  export JDK_JAVA_OPTIONS="--add-opens java.base/java.nio=ALL-UNNAMED"
-  ```
-* Set Snowflake property `JDBC_QUERY_RESULT_FORMAT` to `JSON` as follows:
-  ```ballerina
-  snowflake:Options options = {
-      properties: {
-          "JDBC_QUERY_RESULT_FORMAT": "JSON"
-      }
-  };
-  ```
+> **NOTE**: Snowflake driver fails with Java 16 and above because starting with JDK 16, strong encapsulation was turned on by default and one of the driver dependencies have employed the use of sun.misc.Unsafe along with reflection. This is not allowed in Java 16 and above. Therefore, to run this example, you need to use Java 15 or below. For more information, see [here](https://community.snowflake.com/s/article/JDBC-Driver-Compatibility-Issue-With-JDK-16-and-Later). If you are using Java 16 or above, you can use the following workaround to work with the Snowflake connector:
+>
+> * Export the following environment variable:
+>   ```shell
+>   export JDK_JAVA_OPTIONS="--add-opens java.base/java.nio=ALL-UNNAMED"
+>   ```
+> * Set Snowflake property `JDBC_QUERY_RESULT_FORMAT` to `JSON` as follows:
+>   ```ballerina
+>   snowflake:Options options = {
+>       properties: {
+>           "JDBC_QUERY_RESULT_FORMAT": "JSON"
+>       }
+>   };
+>   ```
 
 Create a Snowflake client endpoint by giving authentication details in the Snowflake configuration.
 ```ballerina
