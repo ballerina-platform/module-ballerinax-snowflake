@@ -1,9 +1,16 @@
 ## Overview
-The [Snowflake](https://www.snowflake.com/) is a cloud-based data platform that provides a data warehouse as a service designed for the cloud, providing a single integrated platform with a single SQL-based data warehouse for all data workloads.
-The Snowflake data warehouse uses a new SQL database engine with a unique architecture designed for the cloud. It provides operations to execute a wide range of standard DDL Commands, SQL Commands, and SQL Functions for querying data sources.
-You can find reference information for all the Snowflake SQL commands (DDL, DML, and query syntax) [here](https://docs.snowflake.com/en/sql-reference-commands.html).
 
-The `ballerinax/snowflake` package allows you to access the Snowflake database via the Ballerina SQL APIs and manage data persistent in the Snowflake database.
+[Snowflake](https://www.snowflake.com/) is a cloud-based data platform that provides a data warehouse as a service. It features a unique architecture designed for the cloud, providing a single integrated platform for all data workloads including data warehousing, data lakes, and data engineering.
+
+The Snowflake connector allows you to access the Snowflake database via standard SQL APIs and manage data persisted in the Snowflake platform.
+
+### Key Features
+
+- Cloud-native data warehouse as a service
+- Support for standard SQL commands (DDL, DML)
+- Efficient handling of large-scale data workloads
+- Seamless integration with Snowflake SQL engine and functions
+- Support for Snowflake-specific data management operations
 
 ## Setup guide
 
