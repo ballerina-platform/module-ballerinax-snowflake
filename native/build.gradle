@@ -25,7 +25,9 @@ plugins {
 
 description = 'Ballerina - Snowflake Native'
 
-applicationDefaultJvmArgs = ['JDK_JAVA_OPTIONS', '--add-opens java.base/java.nio=ALL-UNNAMED']
+application {
+    applicationDefaultJvmArgs = ['JDK_JAVA_OPTIONS', '--add-opens java.base/java.nio=ALL-UNNAMED']
+}
 
 configurations {
     jacocoRuntime
@@ -45,10 +47,8 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-sourceCompatibility = JavaVersion.VERSION_21
-
-jacoco {
-    toolVersion = "0.8.10"
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
 }
 
 test {
@@ -60,7 +60,7 @@ test {
     }
     jacoco {
         enabled = true
-        destinationFile = file("$buildDir/coverage-reports/jacoco.exec")
+        destinationFile = layout.buildDirectory.file("coverage-reports/jacoco.exec").get().asFile
         includeNoLocationClasses = true
     }
 }
@@ -72,7 +72,7 @@ spotbugsMain {
     effort = SpotBugsEffort.MAX
     reportLevel = SpotBugsConfidence.LOW
     ignoreFailures = true
-    reportsDir = file("$project.buildDir/reports/spotbugs")
+    reportsDir = layout.buildDirectory.dir("reports/spotbugs")
     def excludeFile = file("${rootDir}/build-config/spotbugs-exclude.xml")
     if (excludeFile.exists()) {
         it.excludeFilter = excludeFile
