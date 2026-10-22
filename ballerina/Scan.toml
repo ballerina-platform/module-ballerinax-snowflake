@@ -1,0 +1,5 @@
+# ballerina:14 is a false positive. Client.init takes `password` as a parameter supplied by the caller and
+# forwards it as `authConfig: { user, password }`. No literal secret is assigned; the rule only matches the
+# identifier name `password`, which is part of the public API.
+[rule]
+exclude = ["ballerina:14"]
