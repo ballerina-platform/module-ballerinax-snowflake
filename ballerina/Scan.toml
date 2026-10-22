@@ -1,0 +1,8 @@
+# ballerina:14 is a false positive. Client.init takes `password` as a parameter supplied by the caller and
+# forwards it as `authConfig: { user, password }`. No literal secret is assigned; the rule only matches the
+# identifier name `password`, which is part of the public API.
+# TODO: replace this rule exclusion with a targeted scan suppression (with a reason) once `bal scan` supports it
+# (planned for v0.13.0), and fix the false positives on the scan tool side: a secret-named identifier should only be
+# reported when it is assigned a fixed value.
+[rule]
+exclude = ["ballerina:14"]
